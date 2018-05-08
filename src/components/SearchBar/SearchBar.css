@@ -1,0 +1,53 @@
+form.search-bar-form {
+    position: relative;
+}
+
+input.search-bar-input {
+    min-width: 5rem;
+    color: var(--color-darkest);
+    background-color: var(--color-white-xparent);
+    border-width: 0 0 0.06rem 0;
+    border-bottom: 0.1rem solid var(--color-dark);
+    border-radius: 1.6rem;
+    height: 3.2rem;
+    font-size: 2rem;
+    font-weight: bolder;
+    line-height: 3.2rem;
+    padding-left: 1rem;
+    padding-right: 3.2rem;
+    flex: auto;
+    outline: none;
+}
+
+input.search-bar-input:focus {
+    background-color: var(--color-lightest);
+}
+
+input.search-bar-input::placeholder {
+    font-size: 80%;
+    color: var(--color-neutral);
+}
+
+button.search-bar-action {
+    position: absolute;
+    right: 0.05rem;
+    top: 0.05rem;
+    background-color: var(--color-accent);
+    color: var(--color-darkest);
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    width: 3rem;
+    height: 3rem;
+    font-size: 2rem;
+    border-radius: 1.5rem;
+    line-height: 3rem;
+    text-align: center;
+    outline: none;
+}
+
+button.search-bar-action:disabled {
+    background-color: var(--color-neutral-xparent);
+    cursor: not-allowed;
+}
+
