@@ -1,5 +1,45 @@
-body {
-  margin: 0;
+:root {
+  --color-darkest:  #333;
+  --color-dark:     #666;
+  --color-neutral:  #999;
+  --color-light:    #bbb;
+  --color-lightest: #eee;
+  --color-white:    #fff;
+
+  --color-darkest-xparent:  rgba(51, 51, 51, 0.8);
+  --color-dark-xparent:     rgba(102, 102, 102, 0.8);
+  --color-neutral-xparent:  rgba(153, 153, 153, 0.8);
+  --color-light-xparent:    rgba(187, 187, 187, 0.8);
+  --color-lightest-xparent: rgba(238, 238, 238, 0.8);
+  --color-white-xparent:    rgba(255,255,255,0.6);
+
+  --color-accent: #6495ed;
+}
+
+html {
   padding: 0;
-  font-family: sans-serif;
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background-color: var(--color-light);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  font-size: 100%;
+  padding: 0;
+  margin: 0;
+  color: var(--color-darkest);
+  min-height: 100%;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+}
+
+body, p, h1, button {
+  font-family: Verdana, Geneva, sans-serif;
 }
