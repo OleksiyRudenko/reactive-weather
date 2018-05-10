@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './SearchBar.css';
+import CityListDropDown from '../CityListDropDown';
 import * as text from '../../utils/text.js';
 import * as dom from '../../utils/dom.js';
 
@@ -9,8 +10,10 @@ export default class SearchBar extends Component {
     this.state = {
       searchTerm: '',
       actionDisabled: true,
+      showCityList: false,
     };
-    dom.bindHandlers(this, '_handleSearchAction', '_handleUserInput', '_handleUserInputFocus');
+    dom.bindHandlers(this, '_handleSearchAction', '_handleUserInput', '_handleUserInputFocus', '_hideDropDown');
+    this.userInputRef = React.createRef();
   }
 
   /**
@@ -20,6 +23,7 @@ export default class SearchBar extends Component {
   render() {
     return (
       <form className="search-bar-form" onSubmit={this._handleSearchAction}>
+        {this.state.showCityList && <CityListDropDown hideMe={this._hideDropDown} />}
         {this._renderUserInput()}
         {this._renderActionButton()}
       </form>
@@ -40,8 +44,9 @@ export default class SearchBar extends Component {
              inputMode="verbatim"
              placeholder="Kyiv | 50.2,30.1"
              title="Tap me and type!"
-             onInput={this._handleUserInput}
+             onKeyUp={this._handleUserInput}
              onFocus={this._handleUserInputFocus}
+             ref={this.userInputRef}
       />
     );
   }
@@ -70,19 +75,27 @@ export default class SearchBar extends Component {
    */
   _handleUserInput(ev) {
     const target = ev.target;
-    if (ev.keyCode === 13) {
-      console.log('ENTER pressed');
-      ev.preventDefault();
-      ev.stopPropagation();
-
-      target.value = text.sanitizeWhitespaces(target.value, true);
-
-      this.setState({
-        searchTerm: target.value,
-        actionDisabled: target.value.length < 3,
-      });
-
-      this._handleSearchAction();
+    console.log('Key event', ev, ev.target, 'value:', ev.target.value, ev.keyCode);
+    switch (ev.keyCode) {
+      case 13:
+        console.log('ENTER pressed');
+        ev.preventDefault();
+        ev.stopPropagation();
+        target.value = text.sanitizeWhitespaces(target.value, true);
+        this.setState({
+          searchTerm: target.value,
+          actionDisabled: target.value.length < 3,
+        });
+        this._handleSearchAction();
+        break;
+      case 27:
+        this.setState({showCityList:false});
+        break;
+      case 40:
+        console.log('Pressed DOWN');
+        this.setState({showCityList:true});
+        break;
+      // no default
     }
 
     // remove letters if input value starts with [-.\d] as an indication of geocoords input
@@ -95,6 +108,11 @@ export default class SearchBar extends Component {
       searchTerm: target.value,
       actionDisabled: target.value.length < 3,
     });
+  }
+
+  _hideDropDown() {
+    this.setState({showCityList:false});
+    this.userInputRef.current.focus();
   }
 
   /**
@@ -115,7 +133,6 @@ export default class SearchBar extends Component {
   _handleSearchAction(ev = null) {
     if (ev) {
       ev.preventDefault();
-      ev.nativeEvent.stopImmediatePropagation();
       ev.stopPropagation();
     }
     if (!this.state.actionDisabled) {
