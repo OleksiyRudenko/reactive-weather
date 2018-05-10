@@ -21,27 +21,14 @@ class _StorageService {
       recordSet = [recordSet];
     }
     const recordSetLength = recordSet.length;
-    const showProgress = (recordSetLength > 20);
-    let increment = (recordSetLength <= 100) ? 10 : (recordSetLength <= 1000) ? 20 : 100;
-    if (showProgress) this.dependencies.UiControllers.ProgressController.show('Adding records to ' + storeName, '', recordSetLength);
     return this._dbPromise.then(db => {
       const tx = db.transaction(storeName, 'readwrite');
       const store = tx.objectStore(storeName);
-      return Promise.all(recordSet.map((item, index) => {
-          if (!(index%increment)) {
-            this.dependencies.UiControllers.ProgressController.addCount(increment);
-            // console.log('Adding another ' + increment);
-          }
-          return store.put(item);
-        }) // map
+      return Promise.all(recordSet.map((item, index) => store.put(item)) // map
       ).catch(e => {
         this.dependencies.UiControllers.ProgressController.hide(100);
         tx.abort();
         console.log(e);
-      }).then(() => {
-        this.dependencies.UiControllers.ProgressController.setCount(recordSetLength);
-        this.dependencies.UiControllers.ProgressController.hide(2500);
-        // console.log('Added ' + recordSet.length + ' items to ' + storeName);
       });
     });
   }
@@ -137,7 +124,7 @@ class _StorageService {
    * Logs database summary
    */
   _logSummary() {
-    const storeList = [].concat.apply([], this.config.storage.store).map(e => e.storeName);
+    const storeList = [].concat.apply([], this.config.store).map(e => e.storeName);
     storeList.forEach(storeName => {
       this.storeCount(storeName).then(v => {
         console.log('StorageService:', storeName + '.length == ' + v);
