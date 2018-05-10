@@ -1,7 +1,7 @@
 import * as idb from 'idb';
 import {config} from './config.js';
 
-class StorageService {
+class _StorageService {
   constructor() {
     this.config = config;
     this._dbPromise = this._dbOpen(this.config.dbVersion);
@@ -146,4 +146,4 @@ class StorageService {
   }
 }
 
-export const StorageService = new StorageService();
+export const StorageService = new _StorageService();

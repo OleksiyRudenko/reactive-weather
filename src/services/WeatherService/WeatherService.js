@@ -1,6 +1,6 @@
 import {config} from './config.js';
 
-class WeatherService {
+class _WeatherService {
   constructor() {
     this.config = config;
   }
@@ -123,4 +123,4 @@ class WeatherService {
   }
 }
 
-export const WeatherService = new WeatherService();
+export const WeatherService = new _WeatherService();
