@@ -1,1 +1,1 @@
-export { default } from './FavCityService.js';
+export { FavCityService } from './FavCityService.js';

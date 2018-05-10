@@ -1,5 +1,5 @@
 import {config} from './config.js';
-import StorageService from '../StorageService';
+import {StorageService} from '../StorageService';
 
 class _CityHistoryService {
   constructor() {

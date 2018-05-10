@@ -1,1 +1,1 @@
-export { default } from './StorageService.js';
+export { StorageService } from './StorageService.js';

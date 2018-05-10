@@ -1,1 +1,1 @@
-export { default } from './CityHistoryService.js';
+export { CityHistoryService } from './CityHistoryService.js';

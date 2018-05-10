@@ -1,1 +1,1 @@
-export { default } from './WeatherService.js';
+export { WeatherService } from './WeatherService.js';
