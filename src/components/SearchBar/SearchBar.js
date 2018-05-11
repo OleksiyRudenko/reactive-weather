@@ -24,7 +24,7 @@ export default class SearchBar extends Component {
   render() {
     // console.log('SB.render:', this.state);
     return (
-      <form className="search-bar-form" onSubmit={this._handleSearchAction}>
+      <form className="search-bar-form" onSubmit={this._handleSearchAction} autoComplete="off" target="#">
         {this.state.showCityList && <CityListDropDown hideMeBy={this._hideDropDown} handleSelection={this._handleInboundLocation} activateMe={this.state.activateCityList} />}
         {this._renderUserInput()}
         {this._renderActionButton()}
