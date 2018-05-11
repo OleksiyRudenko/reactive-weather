@@ -1,6 +1,11 @@
 import {WeatherApiService} from "../WeatherApiService";
+import {SettingsService} from "../SettingsService";
+import {config} from "./config.js";
 
 class _WeatherService {
+  constructor() {
+    this.config = config;
+  }
 
   /**
    * Get current weather for a given location {cityname|latlon}
@@ -30,7 +35,7 @@ class _WeatherService {
    * @private
    */
   _extractCurrentWeather(src) {
-    return {
+    let result = {
       dt: src.dt,
       geocity: src.name,
       geocountry: src.sys.country,
@@ -47,6 +52,16 @@ class _WeatherService {
       windAzimuth: this.degree2arrow('deg' in src.wind ? Math.round(src.wind.deg) : null),
       clouds: src.clouds.all,
     };
+    // enrich data
+    result = Object.assign(result, {
+      descrIconClass : 'wi ' + this._getWeatherConditionsIcon(result.verbose.tod, result.verbose.conditions),
+      windSpeedUnits : SettingsService.windSpeedUnits,
+      date : new Date(result.dt * 1000),
+      cityFull : result.geocity + ',' + result.geocountry,
+      geoFull : result.geolon + ',' + result.geolat,
+      pressure : Math.round(result.pressure / 1013.25 * 100) / 100,
+    });
+    return result;
   }
 
   /**
@@ -112,6 +127,21 @@ class _WeatherService {
         return (degree >= degKey) ? presets[degKey] : acc;
       }, '')
       + ';';
+  }
+
+  /**
+   * Picks weather icon based on time of the day and conditions
+   * @param {string} tod = day|night
+   * @param {string} verboseConditions = clearSky|rain|snow|...
+   * @returns {string}
+   */
+  _getWeatherConditionsIcon(tod, verboseConditions) {
+    if (!tod)
+      tod = 'day';
+    if (verboseConditions === 'unknown' || Math.floor(Math.random() * 41) > 39) {
+      verboseConditions = 'alien';
+    }
+    return this.config.icons[tod][verboseConditions];
   }
 }
 
