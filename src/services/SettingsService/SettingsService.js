@@ -7,9 +7,11 @@ class _SettingsService {
     this.settingsPromise = this._loadSettings();
   }
 
-  get units() { return this.config.settings.units; }
-  setImperial() { this.config.settings.units = 'imperial'; }
-  setMetric() { this.config.settings.units = 'metric'; }
+  get units() {
+    const res = this.config.settings.units ? Promise.resolve(this.config.settings.units) : this.settingsPromise.then(settings => settings.units);
+    // console.log('SettingsService', this.config.settings.units, res);
+    return res;
+  }
   get windSpeedUnits() { return this.config.windSpeed[this.config.settings.units]; }
 
   /**
@@ -26,7 +28,7 @@ class _SettingsService {
    */
   _updateStorage() {
     const data = {
-      option: 'Units',
+      option: 'units',
       value: this.config.settings.units,
     };
     StorageService.put(this.config.storeName, data).then(() => {
@@ -41,11 +43,13 @@ class _SettingsService {
   _loadSettings() {
     StorageService.storeCount(this.config.storeName).then(count => {
       if (!count) {
+        this.config.settings = Object.assign({}, this.config.defaultSettings);
         this._updateStorage();
       }
     });
     return StorageService.getAll(this.config.storeName).then(items => {
       items.forEach(e => this.config.settings[e.option]=e.value);
+      console.log('StorageService.load:', items);
       return new Promise((resolve, reject) => resolve(this.config.settings));
     });
   }

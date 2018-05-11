@@ -1,7 +1,10 @@
 export const config = {
   storeName: 'settings',
-  settings: {
+  defaultSettings: {
     units: 'imperial',
+  },
+  settings: {
+    units: null,
   },
   windSpeed: {
     metric: 'm/s',

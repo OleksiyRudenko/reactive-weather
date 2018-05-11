@@ -56,12 +56,12 @@ class App extends Component {
       // no default
     }
     // add units explicitly
-    query.units = SettingsService.units;
-
-    console.log('App.getWeather', query);
-
-    WeatherService.getCurrentWeather(inputType, query).then(console.log);
-    WeatherService.getWeatherForecast(inputType, query).then(console.log);
+    SettingsService.units.then(units => {
+      query.units = units;
+      console.log('App.getWeather query', query);
+      WeatherService.getCurrentWeather(inputType, query).then(console.log);
+      WeatherService.getWeatherForecast(inputType, query).then(console.log);
+    });
   }
 }
 
