@@ -10,9 +10,10 @@ export default class SearchBar extends Component {
     this.state = {
       searchTerm: '',
       actionDisabled: true,
-      showCityList: false,
+      showCityList: true,
+      activateCityList: false,
     };
-    dom.bindHandlers(this, '_handleSearchAction', '_handleUserInput', '_handleUserInputFocus', '_hideDropDown');
+    dom.bindHandlers(this, '_handleSearchAction', '_handleUserInput', '_handleUserKey', '_handleUserInputFocus', '_hideDropDown', '_handleInboundLocation');
     this.userInputRef = React.createRef();
   }
 
@@ -21,9 +22,10 @@ export default class SearchBar extends Component {
    * @returns {string}
    */
   render() {
+    // console.log('SB.render:', this.state);
     return (
       <form className="search-bar-form" onSubmit={this._handleSearchAction}>
-        {this.state.showCityList && <CityListDropDown hideMe={this._hideDropDown} />}
+        {this.state.showCityList && <CityListDropDown hideMeBy={this._hideDropDown} handleSelection={this._handleInboundLocation} activateMe={this.state.activateCityList} />}
         {this._renderUserInput()}
         {this._renderActionButton()}
       </form>
@@ -44,7 +46,9 @@ export default class SearchBar extends Component {
              inputMode="verbatim"
              placeholder="Kyiv | 50.2,30.1"
              title="Tap me and type!"
-             onKeyUp={this._handleUserInput}
+             autoFocus={true}
+             onKeyUp={this._handleUserKey}
+             onChange={this._handleUserInput}
              onFocus={this._handleUserInputFocus}
              ref={this.userInputRef}
       />
@@ -75,28 +79,7 @@ export default class SearchBar extends Component {
    */
   _handleUserInput(ev) {
     const target = ev.target;
-    console.log('Key event', ev, ev.target, 'value:', ev.target.value, ev.keyCode);
-    switch (ev.keyCode) {
-      case 13:
-        console.log('ENTER pressed');
-        ev.preventDefault();
-        ev.stopPropagation();
-        target.value = text.sanitizeWhitespaces(target.value, true);
-        this.setState({
-          searchTerm: target.value,
-          actionDisabled: target.value.length < 3,
-        });
-        this._handleSearchAction();
-        break;
-      case 27:
-        this.setState({showCityList:false});
-        break;
-      case 40:
-        console.log('Pressed DOWN');
-        this.setState({showCityList:true});
-        break;
-      // no default
-    }
+    // console.log('SB.UI: value', target.value);
 
     // remove letters if input value starts with [-.\d] as an indication of geocoords input
     if (target.value.length > 0 && /^[-\d.,]/.test(target.value)) {
@@ -107,10 +90,64 @@ export default class SearchBar extends Component {
     this.setState({
       searchTerm: target.value,
       actionDisabled: target.value.length < 3,
+      showCityList: !target.value.length,
+      activateCityList: false,
     });
   }
 
+  /**
+   * Handles user input
+   * @param {Event} ev
+   * @private
+   */
+  _handleUserKey(ev) {
+    // console.log('SB.UK:', 'Key event', ev, ev.target, 'value:', ev.target.value, ev.keyCode);
+    switch (ev.keyCode) {
+      /* case 13:
+        // console.log('SB.UI: ENTER pressed');
+        ev.preventDefault();
+        ev.stopPropagation();
+        target.value = text.sanitizeWhitespaces(target.value, true);
+        this.setState({
+          searchTerm: target.value,
+          actionDisabled: target.value.length < 3,
+        });
+        this._handleSearchAction();
+        break; */
+      case 27:
+        this._hideDropDown();
+        break;
+      case 40:
+        // console.log('SB.UK: Pressed DOWN');
+        this.setState({showCityList: true, activateCityList: true});
+        break;
+      // no default
+    }
+    // console.log('SB.UK: value', target.value);
+  }
+
+  /**
+   * Handles location selection from other components
+   * @param location
+   * @private
+   */
+  _handleInboundLocation(location) {
+    // console.log('SB._handleInboundLocation');
+    this.userInputRef.current.value = location;
+    this.setState({
+      searchTerm: location,
+      actionDisabled: location.length < 3,
+    });
+    this._hideDropDown();
+    this.props.locationHandler(location);
+  }
+
+  /**
+   * Hides city list dropdown
+   * @private
+   */
   _hideDropDown() {
+    // console.log('SB: hide DD');
     this.setState({showCityList:false});
     this.userInputRef.current.focus();
   }
@@ -131,12 +168,20 @@ export default class SearchBar extends Component {
    * @private
    */
   _handleSearchAction(ev = null) {
+    // console.log('SB: submit');
     if (ev) {
       ev.preventDefault();
       ev.stopPropagation();
     }
-    if (!this.state.actionDisabled) {
-      console.log('Search for "' + this.state.searchTerm + '" on', ev?ev:null);
+    const searchTerm = text.sanitizeWhitespaces(this.state.searchTerm, true);
+    const actionDisabled = searchTerm.length < 3;
+    this.setState({
+      searchTerm,
+      actionDisabled,
+    });
+    if (!actionDisabled) {
+      // console.log('SB: Search for "' + searchTerm + '" on', ev?ev:null);
+      this.props.locationHandler(searchTerm);
     }
   }
 }

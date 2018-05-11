@@ -1,0 +1,28 @@
+.city-list-dd-item {
+    padding: 0.5rem 0.5rem 0.25rem 0.5rem;
+    font-size: 1.5rem;
+    cursor: default;
+}
+
+.city-list-dd-item > i {
+    font-size: 1.5rem;
+}
+
+.city-list-dd-item:hover {
+    background-color: #8fccff;
+}
+
+input[type=radio].city-list-dd-item-radio {
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    width: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+}
+
+input[type=radio].city-list-dd-item-radio:checked + .city-list-dd-item {
+    background-color: var(--color-accent);
+}

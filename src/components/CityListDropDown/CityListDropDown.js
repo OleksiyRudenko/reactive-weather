@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './CityListDropDown.css';
 import {FavCityService} from '../../services/FavCityService';
 import {CityHistoryService} from '../../services/CityHistoryService';
+import CityListDropDownEntry from '../CityListDropDownEntry';
 import * as dom from '../../utils/dom.js';
 
 export default class CityListDropDown extends Component {
@@ -12,7 +13,7 @@ export default class CityListDropDown extends Component {
       list: null,
     };
     this._populateLists();
-    dom.bindHandlers(this, '_handleUserInput');
+    dom.bindHandlers(this, '_handleUserKey', '_handleClick');
   }
 
   /**
@@ -21,9 +22,10 @@ export default class CityListDropDown extends Component {
    */
   render() {
     if (!this.state.list) return null;
+    // console.log('CLDD.render: props=', this.props);
     return (
-      <div className='city-list-dd-container' onKeyUp={this._handleUserInput}>
-          {this.state.list.map((item,idx) => <ListItem icon={item.icon} text={item.text} key={idx.toString()} id={idx} />)}
+      <div className='city-list-dd-container' onKeyUp={this._handleUserKey} onClick={this._handleClick}>
+          {this.state.list.map((item,idx) => <CityListDropDownEntry icon={item.icon} text={item.text} key={idx.toString()} id={idx} setFocus={this.props.activateMe && !idx} />)}
       </div>
     );
   }
@@ -64,33 +66,33 @@ export default class CityListDropDown extends Component {
     return CityHistoryService.getItems();
   }
 
-  _handleUserInput(ev) {
+  /**
+   * Handles mouse clicks
+   * @param ev
+   * @private
+   */
+  _handleClick(ev) {
+    if (ev.target.type === 'radio' && ev.nativeEvent.x && ev.nativeEvent.y) {
+      // console.log('CLDD.click', ev.target, ev, ev.keyCode, ev.nativeEvent);
+      this.props.handleSelection(ev.target.value);
+    }
+  }
+
+  /**
+   * Handles special keys
+   * @param ev
+   * @private
+   */
+  _handleUserKey(ev) {
+    // console.log('CLDD.userkey', ev.target);
     switch (ev.keyCode) {
       case 27:
-        this.props.hideMe();
+        this.props.hideMeBy();
+        break;
+      case 13:
+        this.props.handleSelection(ev.target.value);
         break;
       // no default
     }
   }
-
-}
-
-/**
- * Render a list item
- * REF: Focusing https://stackoverflow.com/questions/28889826/react-set-focus-on-input-after-render
- * REF: Focusing https://reactjs.org/docs/refs-and-the-dom.html
- * @param props
- * @returns {*}
- * @constructor
- */
-function ListItem(props) {
-  return (
-    <label htmlFor={'city-list-dd-item-'+props.id}>
-      <input type='radio' name='city-list-dd-selection' id={'city-list-dd-item-'+props.id} value={props.text}
-             className='city-list-dd-item-radio' defaultChecked={!props.id}
-             autoFocus={!props.id}
-      />
-      <div className='city-list-dd-item'><i className='material-icons'>{props.icon}</i>{props.text}</div>
-    </label>
-  );
 }
