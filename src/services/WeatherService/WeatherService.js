@@ -9,7 +9,7 @@ class _WeatherService {
 
   /**
    * Queries external api endpoint
-   * @param {string} queryClass (current|forecast)
+   * @param {string} queryClass (current|forecast5)
    * @param {string} endPoint {cityname|latlon)
    * @param {object} queryData - query parameters
    * @returns {Promise<Response>}
@@ -45,6 +45,7 @@ class _WeatherService {
               data.list[idx].weather[0].verbose = this._decomposeIconId(data.list[idx].weather[0].icon);
             });
             break;
+          // no default
         }
         // console.log(data);
         return data;
