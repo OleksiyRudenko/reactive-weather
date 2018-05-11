@@ -1,0 +1,91 @@
+.weather-current {
+    position: absolute;
+    z-index: -3;
+
+    margin-top: 1rem;
+    background-color: rgba(238,238,238,0.5); /* #eee */
+
+    display: flex;
+    flex-flow: column;
+    flex-shrink: 0;
+    align-items: center;
+}
+
+.weather-current-row {
+    margin-top: 1rem;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+}
+
+.weather-current-row-nowrap {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.weather-current-column {
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+}
+
+.weather-current-column > div {
+    margin: 0.5rem;
+}
+
+.weather-current-item {
+    height: 2.5rem;
+    font-size: 2rem;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+}
+
+.weather-current-header {
+    font-weight: bold;
+    margin-right: 0.5rem;
+}
+
+.weather-current-data {
+}
+
+/* entries */
+
+.weather-current-main-item {
+    padding: 0 10px 0 10px;
+}
+
+.weather-current-descrIcon {
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+    font-size: 8rem;
+}
+
+.weather-current-main-city {
+    font-size: 3rem;
+}
+
+.weather-current-main-geo {
+    font-size: 1.2rem;
+    color: var(--color-dark);
+}
+
+.weather-current-windAzimuth {
+
+}
+
+.weather-current-temp {
+    font-size: 3.5rem;
+}
+
+.weather-current-descr-main {
+    justify-content: center;
+    font-size: 2.4rem;
+}
+
+.weather-current-descr-extended {
+    color: var(--color-dark);
+}

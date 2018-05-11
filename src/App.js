@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.png';
 import './App.css';
 import SearchBar from './components/SearchBar';
+import WeatherCurrent from './components/WeatherCurrent';
 import {SettingsService} from "./services/SettingsService";
 import {WeatherService} from "./services/WeatherService";
 import * as dom from './utils/dom.js';
@@ -9,6 +10,10 @@ import * as dom from './utils/dom.js';
 class App extends Component {
   constructor(props={}) {
     super(props);
+    this.state = {
+      weatherCurrent: null,
+      weatherForecast: null,
+    };
     dom.bindHandlers(this, 'handleLocation');
   }
 
@@ -24,6 +29,7 @@ class App extends Component {
           <h1 className="App-title">Weather app</h1>
         </header>
         <SearchBar locationHandler={this.handleLocation} />
+        {this.state.weatherCurrent && <WeatherCurrent data={this.state.weatherCurrent} />}
       </div>
     );
   }
@@ -59,7 +65,7 @@ class App extends Component {
     SettingsService.units.then(units => {
       query.units = units;
       console.log('App.getWeather query', query);
-      WeatherService.getCurrentWeather(inputType, query).then(console.log);
+      WeatherService.getCurrentWeather(inputType, query).then(data => this.setState({weatherCurrent: data}));
       WeatherService.getWeatherForecast(inputType, query).then(console.log);
     });
   }
