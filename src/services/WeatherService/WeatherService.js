@@ -1,126 +1,117 @@
-import {config} from './config.js';
+import {WeatherApiService} from "../WeatherApiService";
 
 class _WeatherService {
-  constructor() {
-    this.config = config;
-  }
-
-  /* === Public methods === */
 
   /**
-   * Queries external api endpoint
-   * @param {string} queryClass (current|forecast5)
-   * @param {string} endPoint {cityname|latlon)
-   * @param {object} queryData - query parameters
+   * Get current weather for a given location {cityname|latlon}
+   * @param inputType
+   * @param query
+   * @returns {Promise<{dt, geocity, geocountry, geolat, geolon, descr, descrDetails, descrIcon, verbose, temp, pressure, humidity, windSpeed, windAzimuth, clouds}>}
+   */
+  getCurrentWeather(inputType, query) {
+    return WeatherApiService.apiRequest('current', inputType, query)
+      .then(result => this._extractCurrentWeather(result));
+  }
+
+  /**
+   * Get weather forecast for a given location {cityname|latlon}
+   * @param inputType
+   * @param query
    * @returns {Promise<Response>}
    */
-  apiRequest(queryClass, endPoint, queryData) {
-    let query = this.config.apiUrl + this.config.apiEndpoint[queryClass][endPoint].path + '?';
-    // add query data
-    const paramSet = Object.keys(queryData).map(param => param + '=' + queryData[param]);
-    query += paramSet.join('&');
-
-    // add api key
-    query += '&' + this.config.apiParamName + '=' + this.config.apiKey;
-
-    /* this.debugThisClassName('apiRequest');
-    console.log(query);
-    console.log(queryData); */
-
-    return fetch(query, {method: 'get'})
-      .then(response => {
-        if (response.ok)
-          return response.json();
-        throw response.status;
-      })
-      .then(data => {
-        // verbalize icon
-        // this.debugThisClassName('apiRequest ' + queryClass);
-        switch (queryClass) {
-          case 'current':
-            data.weather[0].verbose = this._decomposeIconId(data.weather[0].icon);
-            break;
-          case 'forecast5':
-            data.list.forEach((entry, idx) => {
-              data.list[idx].weather[0].verbose = this._decomposeIconId(data.list[idx].weather[0].icon);
-            });
-            break;
-          // no default
-        }
-        // console.log(data);
-        return data;
-      })
-      .catch(error => {
-        // console.error(error);
-        throw error;
-      });
+  getWeatherForecast(inputType, query) {
+    return WeatherApiService.apiRequest('forecast5', inputType, query)
+      .then(result => this._extractForecast(result));
   }
 
   /**
-   * Returns promise to provide an icon
-   * @param {string} iconId
-   * @returns {Promise<Response>} image url to use as a value for image.src
+   * Converts current weather data adapted for display
+   * @param {Object} src
+   * @private
    */
-  apiRequestIcon(iconId) {
-    let query = this.apiIconUrl(iconId);
-    return fetch(query, {method: 'get'})
-      .then(response => {
-        if (response.ok)
-          return response.blob();
-        throw response.status;
-      })
-      .then(blob => {
-        return URL.createObjectURL(blob);
-      })
-      .catch(error => {
-        // console.error(error);
-        throw error;
-      });
-  }
-
-  /* === Private methods : SECONDARY === */
-
-  /**
-   * Build url to reach icon
-   * @param {string} iconId
-   * @returns {string} url
-   */
-  apiIconUrl(iconId) {
-    return this.config.iconUrl + iconId + this.config.iconExt;
-  }
-
-  /**
-   * Verbalizes iconId code
-   * @param {string} iconId
-   * returns {Object} { tod: day|night, conditions: ... }
-   */
-  _decomposeIconId(iconId) {
+  _extractCurrentWeather(src) {
     return {
-      tod: iconId.substr(2) === 'd' ? 'day' : 'night',
-      conditions: this._verbalizeConditionsCode(iconId.substr(0,2)),
+      dt: src.dt,
+      geocity: src.name,
+      geocountry: src.sys.country,
+      geolat: src.coord.lat,
+      geolon: src.coord.lon,
+      descr: src.weather[0].main,
+      descrDetails: src.weather[0].description,
+      descrIcon: '<img src="' + WeatherApiService.apiIconUrl(src.weather[0].icon) + '" />',
+      verbose: src.weather[0].verbose,
+      temp: Math.round(src.main.temp),
+      pressure: Math.round(src.main.pressure),
+      humidity: src.main.humidity,
+      windSpeed: Math.round(src.wind.speed),
+      windAzimuth: this.degree2arrow('deg' in src.wind ? Math.round(src.wind.deg) : null),
+      clouds: src.clouds.all,
     };
   }
 
   /**
-   * Verbalizes 2-digit conditions code
-   * @param {string} conditionsCode
-   * @returns {string}
-   * http://erikflowers.github.io/weather-icons/
-   * http://www.alessioatzeni.com/meteocons/
+   * Converts forecast weather data adapted for display
+   * @param {Object} src
+   * @private
    */
-  _verbalizeConditionsCode(conditionsCode) {
-    switch (conditionsCode) {
-      case '01': return 'clearSky';
-      case '02': return 'fewClouds';
-      case '03': return 'scatteredClouds';
-      case '04': return 'brokenClouds';
-      case '09': return 'showerRain';
-      case '10': return 'rain';
-      case '11': return 'thunderStorm';
-      case '13': return 'snow';
-      case '50': return 'mist';
-      default: return 'unknown';
-    }
+  _extractForecast(src) {
+    let result = {
+      // dt: src.dt,
+      geocity: src.city.name,
+      geocountry: src.city.country,
+      geolat: src.city.coord.lat,
+      geolon: src.city.coord.lon,
+    };
+
+    let weatherList = src.list.filter(item => {
+      const time = item.dt_txt.substring(11,13);
+      // console.log('Time: ' + time);
+      return (time === '03' || time === '09' || time === '15' || time === '21');
+
+    });
+    weatherList.sort((a,b) => a.dt - b.dt);
+    result.weatherSchedule = weatherList.map(item => ({
+      dtDate: item.dt_txt.substring(8,10) + '/' + item.dt_txt.substring(5,7),
+      dtHours: item.dt_txt.substring(11,13),
+      descr: item.weather[0].main,
+      descrDetails: item.weather[0].description,
+      descrIcon: '<img src="' + WeatherApiService.apiIconUrl(item.weather[0].icon) + '" />',
+      verbose: item.weather[0].verbose,
+      temp: Math.round(item.main.temp),
+      pressure: Math.round(item.main.pressure),
+      humidity: item.main.humidity,
+      windSpeed: Math.round(item.wind.speed),
+      windAzimuth: this.degree2arrow('deg' in item.wind ? Math.round(item.wind.deg) : null),
+      clouds: item.clouds.all,
+    }));
+
+    return result;
+  }
+
+  /**
+   * Converts degree [0, 360] to the relevant HTML entity
+   * @param degree
+   */
+  degree2arrow(degree) {
+    if (degree === null) return '';
+    degree = degree % 360;
+    const presets = {
+      0: 'uarr',
+      22: 'nearr',
+      67: 'rarr',
+      112: 'searr',
+      157: 'darr',
+      202: 'swarr',
+      247: 'larr',
+      292: 'nwarr',
+      337: 'uarr',
+    };
+    // console.log('Degree: ' + degree);
+    return '&'
+      + Object.keys(presets).reduce((acc, degKey) => {
+        return (degree >= degKey) ? presets[degKey] : acc;
+      }, '')
+      + ';';
   }
 }
 
