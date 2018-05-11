@@ -20,15 +20,15 @@ class _StorageService {
     if (!Array.isArray(recordSet)) {
       recordSet = [recordSet];
     }
-    const recordSetLength = recordSet.length;
+    // const recordSetLength = recordSet.length;
     return this._dbPromise.then(db => {
       const tx = db.transaction(storeName, 'readwrite');
       const store = tx.objectStore(storeName);
-      return Promise.all(recordSet.map((item, index) => store.put(item)) // map
+      return Promise.all(recordSet.map(item => store.put(item)) // map
       ).catch(e => {
-        this.dependencies.UiControllers.ProgressController.hide(100);
         tx.abort();
         console.log(e);
+        throw e;
       });
     });
   }
