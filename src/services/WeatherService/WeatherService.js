@@ -62,7 +62,7 @@ class _WeatherService {
    * @returns {Promise<Response>} image url to use as a value for image.src
    */
   apiRequestIcon(iconId) {
-    let query = this._apiIconUrl(iconId);
+    let query = this.apiIconUrl(iconId);
     return fetch(query, {method: 'get'})
       .then(response => {
         if (response.ok)
@@ -85,7 +85,7 @@ class _WeatherService {
    * @param {string} iconId
    * @returns {string} url
    */
-  _apiIconUrl(iconId) {
+  apiIconUrl(iconId) {
     return this.config.iconUrl + iconId + this.config.iconExt;
   }
 
