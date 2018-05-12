@@ -54,12 +54,15 @@ class _WeatherService {
       originalQuery: src.originalQuery,
     };
     // enrich data
+    const lon = Math.round(result.geolon * 10) / 10 * (result.geolon<0?-1:1) + (result.geolon<0?'W':'E');
+    const lat = Math.round(result.geolat * 10) / 10 * (result.geolat<0?-1:1) + (result.geolat<0?'S':'N');
+
     result = Object.assign(result, {
       descrIconClass : 'wi ' + this._getWeatherConditionsIcon(result.verbose.tod, result.verbose.conditions),
       windSpeedUnits : SettingsService.windSpeedUnits,
       date : new Date(result.dt * 1000),
       cityFull : result.geocity + ',' + result.geocountry,
-      geoFull : result.geolon + ',' + result.geolat,
+      geoFull : lat + ',' + lon,
       pressure : Math.round(result.pressure / 1013.25 * 100) / 100,
     });
     return result;
