@@ -51,6 +51,7 @@ class _WeatherService {
       windSpeed: Math.round(src.wind.speed),
       windAzimuth: this.degree2arrow('deg' in src.wind ? Math.round(src.wind.deg) : null),
       clouds: src.clouds.all,
+      originalQuery: src.originalQuery,
     };
     // enrich data
     result = Object.assign(result, {
@@ -76,6 +77,7 @@ class _WeatherService {
       geocountry: src.city.country,
       geolat: src.city.coord.lat,
       geolon: src.city.coord.lon,
+      originalQuery: src.originalQuery,
     };
 
     let weatherList = src.list.filter(item => {

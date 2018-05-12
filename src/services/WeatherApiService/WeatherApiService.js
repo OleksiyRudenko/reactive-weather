@@ -48,6 +48,7 @@ class _WeatherApiService {
           // no default
         }
         // console.log(data);
+        data.originalQuery = queryData;
         return data;
       })
       .catch(error => {
