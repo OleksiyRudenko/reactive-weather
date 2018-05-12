@@ -160,6 +160,9 @@ export default class SearchBar extends Component {
   _handleUserInputFocus(ev) {
     const target = ev.target;
     target.setSelectionRange(0, target.value.length);
+    if (target.value.length > 0) {
+      this.setState({showCityList:false});
+    }
   }
 
   /**
