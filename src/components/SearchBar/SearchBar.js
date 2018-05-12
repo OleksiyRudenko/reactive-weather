@@ -148,8 +148,8 @@ export default class SearchBar extends Component {
    */
   _hideDropDown() {
     // console.log('SB: hide DD');
-    this.setState({showCityList:false});
     this.userInputRef.current.focus();
+    this.setState({showCityList:false, activateCityList: false});
   }
 
   /**
@@ -160,9 +160,7 @@ export default class SearchBar extends Component {
   _handleUserInputFocus(ev) {
     const target = ev.target;
     target.setSelectionRange(0, target.value.length);
-    if (target.value.length > 0) {
-      this.setState({showCityList:false});
-    }
+    this.setState({showCityList: !target.value.length, activateCityList: false});
   }
 
   /**
