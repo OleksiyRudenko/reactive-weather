@@ -89,3 +89,24 @@
 .weather-current-descr-extended {
     color: var(--color-dark);
 }
+
+/* buttons */
+.weather-current-unit-switch {
+    cursor: pointer;
+
+    font-size: 3.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    border-radius: 0.5rem;
+
+    background: var(--color-lightest-xparent);
+    border: none;
+    overflow: hidden;
+    outline: none;
+    color: var(--color-darkest);
+    line-height: 1.2rem;
+}
+
+.weather-current-unit-switch:hover:enabled {
+    background-color: var(--color-accent);
+}

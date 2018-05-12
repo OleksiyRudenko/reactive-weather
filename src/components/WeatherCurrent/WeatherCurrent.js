@@ -37,14 +37,9 @@ export default class WeatherCurrent extends Component {
             <div className="weather-current-column">
               <div className="weather-current-row">
                 <div className="weather-current-temp">{data.temp}</div>
-                <div id="unit-switch" className="unit-switch" title="Switch me!">
-                  <button className="btn-frameless btn-unit-switch" type="button">
-                    <i className="wi wi-celsius"></i>
+                  <button className="weather-current-unit-switch" type="button" title="Switch me!" onClick={this.props.unitSwitchHandler}>
+                    <i className={'wi ' + (data.originalQuery.units==='imperial'?'wi-fahrenheit':'wi-celsius')}></i>
                   </button>
-                  <button className="btn-frameless btn-unit-switch" type="button">
-                    <i className="wi wi-fahrenheit"></i>
-                  </button>
-                </div>
               </div>
               <div className="weather-current-descr-main">{data.descr}</div>
               <div className="weather-current-descr-extended">{data.descrDetails}</div>

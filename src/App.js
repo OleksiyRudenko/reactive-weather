@@ -14,7 +14,7 @@ class App extends Component {
       weatherCurrent: null,
       weatherForecast: null,
     };
-    dom.bindHandlers(this, 'handleLocation');
+    dom.bindHandlers(this, 'handleLocation', 'handleUnitSwitch');
   }
 
   /**
@@ -29,7 +29,7 @@ class App extends Component {
           <h1 className="App-title">Weather app</h1>
         </header>
         <SearchBar locationHandler={this.handleLocation} />
-        {this.state.weatherCurrent && <WeatherCurrent data={this.state.weatherCurrent} />}
+        {this.state.weatherCurrent && <WeatherCurrent data={this.state.weatherCurrent} unitSwitchHandler={this.handleUnitSwitch} />}
       </div>
     );
   }
@@ -41,9 +41,15 @@ class App extends Component {
    */
   handleLocation(location) {
     console.log('APP.handleLocation', location);
+    this.setState({searchTerm:location});
     this._getWeather(location);
   }
 
+  /**
+   * Show weather
+   * @param {string} location
+   * @private
+   */
   _getWeather(location) {
     const inputType = /^[-\d\s,.]+$/.test(location) ? 'latlon' : 'cityname';
     let query = {};
@@ -65,9 +71,28 @@ class App extends Component {
     SettingsService.units.then(units => {
       query.units = units;
       console.log('App.getWeather query', query);
-      WeatherService.getCurrentWeather(inputType, query).then(data => this.setState({weatherCurrent: data}));
+      this._getCurrentWeather(inputType, query);
       WeatherService.getWeatherForecast(inputType, query).then(console.log);
     });
+  }
+
+  /**
+   * Show current weather
+   * @param {string} inputType {cityname|latlon}
+   * @param {Object} query
+   * @private
+   */
+  _getCurrentWeather(inputType, query) {
+    WeatherService.getCurrentWeather(inputType, query).then(data => this.setState({weatherCurrent: data}));
+  }
+
+  /**
+   * Handles units switch
+   * @private
+   */
+  handleUnitSwitch() {
+    SettingsService.switchUnits();
+    this._getWeather(this.state.searchTerm);
   }
 }
 
