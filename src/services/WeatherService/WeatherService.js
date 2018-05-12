@@ -116,22 +116,21 @@ class _WeatherService {
     if (degree === null) return '';
     degree = degree % 360;
     const presets = {
-      0: 'uarr',
-      22: 'nearr',
-      67: 'rarr',
-      112: 'searr',
-      157: 'darr',
-      202: 'swarr',
-      247: 'larr',
-      292: 'nwarr',
-      337: 'uarr',
+      0: '↑', // 'uarr',
+      22: '↗', // 'nearr',
+      67: '→', // 'rarr',
+      112: '↘', // 'searr',
+      157: '↓', // ''darr',
+      202: '↙', // 'swarr',
+      247: '←', // 'larr',
+      292: '↖', // 'nwarr',
+      337: '↑', // 'uarr',
     };
     // console.log('Degree: ' + degree);
-    return '&'
-      + Object.keys(presets).reduce((acc, degKey) => {
+    return /* '&' + */ Object.keys(presets).reduce((acc, degKey) => {
         return (degree >= degKey) ? presets[degKey] : acc;
-      }, '')
-      + ';';
+      }, '');
+      // + ';';
   }
 
   /**
