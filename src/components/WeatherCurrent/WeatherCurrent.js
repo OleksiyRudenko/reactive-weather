@@ -5,6 +5,9 @@ export default class WeatherCurrent extends Component {
   render() {
     const data = this.props.data;
     console.log('WeatherCurrent', data);
+    if (data === 'pending') {
+      return <div className="width-100"><div className='loader loader-big'></div></div>;
+    }
     return (
       <div className="weather-current">
         <div className="weather-current-row">

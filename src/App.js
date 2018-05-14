@@ -83,7 +83,8 @@ class App extends Component {
    * @private
    */
   _getCurrentWeather(inputType, query) {
-    WeatherService.getCurrentWeather(inputType, query).then(data => this.setState({weatherCurrent: data}));
+    this.setState({weatherCurrent: 'pending'});
+    WeatherService.getCurrentWeather(inputType, query).then(data => setTimeout(() => this.setState({weatherCurrent: data}), 500));
   }
 
   /**
