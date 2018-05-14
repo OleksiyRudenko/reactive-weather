@@ -62,7 +62,7 @@ class _WeatherService {
       descrIconClass : 'wi ' + this._getWeatherConditionsIcon(result.verbose.tod, result.verbose.conditions),
       windSpeedUnits : SettingsService.windSpeedUnits,
       date : new Date(result.dt * 1000),
-      cityFull : result.geocity + ',' + result.geocountry,
+      cityFull : result.geocity + (result.geocountry ? ',' + result.geocountry : ''),
       geoFull : lat + ',' + lon,
       pressure : Math.round(result.pressure / 1013.25 * 100) / 100,
     });

@@ -13,6 +13,16 @@ export default class WeatherCurrent extends Component {
     if (data === 'pending') {
       return <div className="width-100"><div className='loader loader-big'></div></div>;
     }
+
+    if (typeof data.showFavControl === 'undefined')
+      data.showFavControl = true;
+    if (data.showFavControl && !data.cityFull.length) {
+      // no mnemonic location
+      data.cityFull = data.geoFull;
+      data.geoFull = '';
+      data.showFavControl = false;
+    }
+
     const favCityPresets = (data.isFavCity) ? {
       className: 'weather-current-favourite-yes weather-current-favourite-button',
       title: 'Remove from favourites',
@@ -22,9 +32,12 @@ export default class WeatherCurrent extends Component {
       title: 'Love me!',
       icon: 'star_border',
     };
-    const favCityStatus = (data.isFavCity === 'pending')
-      ? <div className='loader loader-small'></div>
-      : <button onClick={this.favCitySwitch} className={favCityPresets.className} title={favCityPresets.title}><i className="material-icons">{favCityPresets.icon}</i></button>;
+    console.log(data.showFavControl);
+    const favCityStatus = data.showFavControl
+      ? (data.isFavCity === 'pending'
+        ? <div className='loader loader-small'></div>
+        : <button onClick={this.favCitySwitch} className={favCityPresets.className} title={favCityPresets.title}><i className="material-icons">{favCityPresets.icon}</i></button>
+      ) : '';
     return (
       <div className="weather-current">
         <div className="weather-current-row">
