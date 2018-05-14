@@ -8,7 +8,7 @@ export default class SearchBar extends Component {
   constructor(props = {}) {
     super(props);
     this.state = {
-      searchTerm: '',
+      searchTerm: this.props.searchTerm,
       actionDisabled: true,
       showCityList: true,
       activateCityList: false,
@@ -40,8 +40,9 @@ export default class SearchBar extends Component {
    * @private
    */
   _renderUserInput() {
+    // console.log('SB._renderUserInput state', this.state);
     return (
-      <input type="text" className="search-bar-input" value={this.state.searchTerm}
+      <input type="text" className="search-bar-input" defaultValue={this.state.searchTerm}
              required="true"
              minLength="3"
              maxLength="20"
@@ -187,4 +188,15 @@ export default class SearchBar extends Component {
       this.props.locationHandler(searchTerm);
     }
   }
+
+  /*
+  componentWillUpdate(nextProps, nextState) {
+    console.log('SB.willUpdate', nextProps, nextState);
+    // nextState.searchTerm = nextProps.searchTerm;
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    console.log('SB.willUpdate', prevProps, prevState);
+    // nextState.searchTerm = nextProps.searchTerm;
+  } */
 }
