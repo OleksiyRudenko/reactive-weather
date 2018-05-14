@@ -36,7 +36,7 @@ class App extends Component {
    * @private
    */
   handleLocation(location) {
-    // console.log('APP.handleLocation', location);
+    console.log('APP.handleLocation', location);
     this.setState({searchTerm:location});
     this._getWeather(location);
   }
@@ -69,6 +69,13 @@ class App extends Component {
     WeatherService.getCurrentWeather(inputType, query).then(data => setTimeout(() => {
       data.isFavCity = 'pending';
       this.setState({weatherCurrent: data});
+      // this.setState({searchTerm: data.cityFull});
+      console.log('APP._getCurrentWeather data', data);
+      if (data.cityFull && data.cityFull.length) {
+        // manage history
+        this._addHistoryEntry(data.cityFull);
+      }
+
       FavCityService.getItem(data.cityFull).then(result => {
         // console.log('App._getCurrentWeather', result);
         data.isFavCity = !!result;
@@ -169,6 +176,15 @@ class App extends Component {
     });
 
     return coord;
+  }
+
+  /**
+   * Add item to history list and window.history
+   * @param {string} cityFull
+   * @private
+   */
+  _addHistoryEntry(cityFull) {
+    console.log('App._addHistoryEntry(): put into history', cityFull);
   }
 }
 
