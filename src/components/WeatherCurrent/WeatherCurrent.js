@@ -8,9 +8,13 @@ export default class WeatherCurrent extends Component {
     if (data === 'pending') {
       return <div className="width-100"><div className='loader loader-big'></div></div>;
     }
+    const favCityStatus = (data.isFavCity === 'pending')
+      ? <div className='loader loader-small'></div>
+      : data.isFavCity ? <div>isFav</div> : <div>!fav</div>;
     return (
       <div className="weather-current">
         <div className="weather-current-row">
+          {favCityStatus}
           <button id="favourite-no" className="favourite-no btn-frameless btn-round" title="Love me!"><i className="material-icons">star_border</i></button>
           <button id="favourite-yes" className="favourite-yes btn-frameless btn-round display-none" title="Remove from favourites"><i className="material-icons">star</i></button>
           <div className="weather-current-main-city">{data.cityFull}</div>

@@ -29,24 +29,23 @@
    src: https://www.w3schools.com/howto/howto_css_loader.asp
 */
 .loader {
-  border: 16px solid #f3f3f3;
+  border: 1rem solid var(--color-lightest);
   border-radius: 50%;
-  border-top: 16px solid #3498db;
-  width: 120px;
-  height: 120px;
+  border-top: 1rem solid var(--color-accent);
   -webkit-animation: loader-spin 2s linear infinite; /* Safari */
   animation: loader-spin 2s linear infinite;
   margin: 0 auto;
 }
 
 .loader-big {
-  width: 120px;
-  height: 120px;
+  width: 8rem;
+  height: 8rem;
 }
 
 .loader-small {
-  width: 60px;
-  height: 60px;
+  border-width: 0.5rem;
+  width: 2rem;
+  height: 2rem;
 }
 
 /* Safari */

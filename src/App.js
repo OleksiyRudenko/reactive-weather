@@ -5,6 +5,7 @@ import SearchBar from './components/SearchBar';
 import WeatherCurrent from './components/WeatherCurrent';
 import {SettingsService} from "./services/SettingsService";
 import {WeatherService} from "./services/WeatherService";
+import {FavCityService} from "./services/FavCityService";
 import * as dom from './utils/dom.js';
 
 class App extends Component {
@@ -84,7 +85,15 @@ class App extends Component {
    */
   _getCurrentWeather(inputType, query) {
     this.setState({weatherCurrent: 'pending'});
-    WeatherService.getCurrentWeather(inputType, query).then(data => setTimeout(() => this.setState({weatherCurrent: data}), 500));
+    WeatherService.getCurrentWeather(inputType, query).then(data => setTimeout(() => {
+      data.isFavCity = 'pending';
+      this.setState({weatherCurrent: data});
+      FavCityService.getItem(data.cityFull).then(result => {
+        console.log('App._getCurrentWeather', result);
+        data.isFavCity = result;
+        this.setState({weatherCurrent: data});
+      }).catch(e => console.error);
+    }, 500));
   }
 
   /**
