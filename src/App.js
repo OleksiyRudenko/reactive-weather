@@ -124,8 +124,8 @@ class App extends Component {
       case 'latlon':
         const coordComponents = location.split(/[\s,]/);
         query = {
-          lon: coordComponents[0],
-          lat: coordComponents[coordComponents.length-1],
+          lat: coordComponents[0],
+          lon: coordComponents[coordComponents.length-1],
         };
         break;
       // no default
