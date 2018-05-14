@@ -85,7 +85,7 @@ export default class SearchBar extends Component {
 
     // remove letters if input value starts with [-.\d] as an indication of geocoords input
     if (target.value.length > 0 && /^[-\d.,]/.test(target.value)) {
-      target.value = target.value.replace(/[^-\d.,\s]/g,'');
+      target.value = target.value.replace(/[^-\d.,\sNSWEnswe]/g,''); // allow NSWE
     }
     target.value = text.sanitizeWhitespaces(target.value);
 

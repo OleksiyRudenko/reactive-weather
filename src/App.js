@@ -36,7 +36,7 @@ class App extends Component {
    * @private
    */
   handleLocation(location) {
-    console.log('APP.handleLocation', location);
+    // console.log('APP.handleLocation', location);
     this.setState({searchTerm:location});
     this._getWeather(location);
   }
@@ -54,7 +54,7 @@ class App extends Component {
       query.units = units;
       console.log('App.getWeather query', query);
       this._getCurrentWeather(inputType, query);
-      WeatherService.getWeatherForecast(inputType, query).then(console.log);
+      // WeatherService.getWeatherForecast(inputType, query).then(console.log);
     });
   }
 
@@ -70,7 +70,7 @@ class App extends Component {
       data.isFavCity = 'pending';
       this.setState({weatherCurrent: data});
       FavCityService.getItem(data.cityFull).then(result => {
-        console.log('App._getCurrentWeather', result);
+        // console.log('App._getCurrentWeather', result);
         data.isFavCity = !!result;
         this.setState({weatherCurrent: data});
       }).catch(e => console.error);
@@ -105,7 +105,7 @@ class App extends Component {
    * @private
    */
   _detectInputType(location) {
-    return /^[-\d\s,.]+$/.test(location) ? 'latlon' : 'cityname';
+    return /^[-\d\s,.NSWEnswe]+$/.test(location) ? 'latlon' : 'cityname';
   }
 
   /**
@@ -122,15 +122,53 @@ class App extends Component {
         query = { q: location};
         break;
       case 'latlon':
-        const coordComponents = location.split(/[\s,]/);
-        query = {
-          lat: coordComponents[0],
-          lon: coordComponents[coordComponents.length-1],
-        };
+        query = this._parseGeoCoords(location);
         break;
       // no default
     }
     return query;
+  }
+
+  /**
+   * Parses geo coordinates from a string input
+   * @param {string} location
+   * @private
+   */
+  _parseGeoCoords(location) {
+    // add zeroes to make sure any numerics are in place
+    const coordList = (location + ' 0 0').split(/[\s,]/);
+    let coord = {
+      lat: 0,
+      lon: 0,
+    };
+    // anything with either of SNsn is a latitude; Ss should be negative
+    // anything with either of EWew is a longitude; Ww should be negative
+    const presets = {
+      denoters: ['N', 'S', 'E', 'W'],
+      mutators: {
+        N: {target: 'lat', factor: 1},
+        S: {target: 'lat', factor: -1},
+        E: {target: 'lon', factor: 1},
+        W: {target: 'lon', factor: -1},
+      },
+    };
+    let parsed = 0;
+    // console.log('Parse geo in:', coordList, presets);
+    coordList.forEach((coordItem, idx) => {
+      if (parsed>=2) return; // skip if we have two legal values parsed
+      let numeric = Number(coordItem.replace(/[^-\d.]/g,''));
+      if (Number.isNaN(numeric)) return;
+      const letter = coordItem.toUpperCase().split('').find(el => presets.denoters.includes(el));
+      // console.log('Geo coord parsing', numeric, letter);
+      if (typeof letter === 'undefined') {
+        coord[!!idx ? 'lon' : 'lat' ] = numeric;
+      } else {
+        coord[presets.mutators[letter].target] = Math.abs(numeric) * presets.mutators[letter].factor;
+      }
+      parsed++;
+    });
+
+    return coord;
   }
 }
 
