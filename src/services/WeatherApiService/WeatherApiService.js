@@ -49,6 +49,7 @@ class _WeatherApiService {
         }
         // console.log(data);
         data.originalQuery = queryData;
+        data.originalEndPoint = endPoint;
         return data;
       })
       .catch(error => {

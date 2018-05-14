@@ -98,8 +98,7 @@
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     border-radius: 0.5rem;
-
-    background: var(--color-lightest-xparent);
+    background-color: var(--color-lightest-xparent);
     border: none;
     overflow: hidden;
     outline: none;
@@ -109,4 +108,35 @@
 
 .weather-current-unit-switch:hover:enabled {
     background-color: var(--color-accent);
+}
+
+.weather-current-favourite-button {
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    width: 2.6rem;
+    height: 2.6rem;
+    font-size: 2rem;
+    border-radius: 1.3rem;
+    line-height: 2.1rem;
+    text-align: center;
+    outline: none;
+}
+
+.weather-current-favourite-button:hover:enabled {
+    background-color: CornflowerBlue;
+}
+
+.weather-current-favourite-button:disabled {
+    cursor: not-allowed;
+}
+
+.weather-current-favourite-no {
+    color: var(--color-light);
+    background-color: var(--color-lightest-xparent);
+}
+
+.weather-current-favourite-yes {
+    color: var(--color-bright);
+    background-color: var(--color-neutral);
 }

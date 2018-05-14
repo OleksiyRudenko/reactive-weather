@@ -15,7 +15,7 @@ class App extends Component {
       weatherCurrent: null,
       weatherForecast: null,
     };
-    dom.bindHandlers(this, 'handleLocation', 'handleUnitSwitch');
+    dom.bindHandlers(this, 'handleLocation', 'handleUnitSwitch', 'handleFavCitySwitch');
   }
 
   /**
@@ -30,7 +30,7 @@ class App extends Component {
           <h1 className="App-title">Weather app</h1>
         </header>
         <SearchBar locationHandler={this.handleLocation} />
-        {this.state.weatherCurrent && <WeatherCurrent data={this.state.weatherCurrent} unitSwitchHandler={this.handleUnitSwitch} />}
+        {this.state.weatherCurrent && <WeatherCurrent data={this.state.weatherCurrent} unitSwitchHandler={this.handleUnitSwitch} favCitySwitch={this.handleFavCitySwitch} />}
       </div>
     );
   }
@@ -52,22 +52,8 @@ class App extends Component {
    * @private
    */
   _getWeather(location) {
-    const inputType = /^[-\d\s,.]+$/.test(location) ? 'latlon' : 'cityname';
-    let query = {};
-
-    switch (inputType) {
-      case 'cityname':
-        query = { q: location};
-        break;
-      case 'latlon':
-        const coordComponents = location.split(/[\s,]/);
-        query = {
-          lon: coordComponents[0],
-          lat: coordComponents[coordComponents.length-1],
-        };
-        break;
-      // no default
-    }
+    const inputType = this._detectInputType(location);
+    const query = this._buildQuery(location);
     // add units explicitly
     SettingsService.units.then(units => {
       query.units = units;
@@ -90,7 +76,7 @@ class App extends Component {
       this.setState({weatherCurrent: data});
       FavCityService.getItem(data.cityFull).then(result => {
         console.log('App._getCurrentWeather', result);
-        data.isFavCity = result;
+        data.isFavCity = !!result;
         this.setState({weatherCurrent: data});
       }).catch(e => console.error);
     }, 500));
@@ -98,11 +84,58 @@ class App extends Component {
 
   /**
    * Handles units switch
-   * @private
    */
   handleUnitSwitch() {
     SettingsService.switchUnits();
     this._getWeather(this.state.searchTerm);
+  }
+
+  /**
+   * Handles favourite city switch
+   */
+  handleFavCitySwitch(isFavCity, cityNameFull) {
+    console.log('App.handleFavCitySwitch: change state ', isFavCity, 'for', cityNameFull);
+    const method = isFavCity ? 'deleteEntry' : 'addEntry';
+    const argument = isFavCity ? cityNameFull : {name:cityNameFull};
+    FavCityService[method](argument).then(() => {
+      console.log('App.handleFavCitySwitch: changed state with method', method);
+      this._getCurrentWeather(this.state.weatherCurrent.originalEndPoint, this.state.weatherCurrent.originalQuery);
+    });
+  }
+
+  /**
+   * Detects input type (latlon|cityname) from location input
+   * @param location
+   * @returns {string}
+   * @private
+   */
+  _detectInputType(location) {
+    return /^[-\d\s,.]+$/.test(location) ? 'latlon' : 'cityname';
+  }
+
+  /**
+   * Builds query from location input
+   * @param {string} location
+   * @returns {Object}
+   * @private
+   */
+  _buildQuery(location) {
+    let query = {};
+
+    switch (this._detectInputType(location)) {
+      case 'cityname':
+        query = { q: location};
+        break;
+      case 'latlon':
+        const coordComponents = location.split(/[\s,]/);
+        query = {
+          lon: coordComponents[0],
+          lat: coordComponents[coordComponents.length-1],
+        };
+        break;
+      // no default
+    }
+    return query;
   }
 }
 

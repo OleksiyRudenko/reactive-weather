@@ -52,6 +52,7 @@ class _WeatherService {
       windAzimuth: this.degree2arrow('deg' in src.wind ? Math.round(src.wind.deg) : null),
       clouds: src.clouds.all,
       originalQuery: src.originalQuery,
+      originalEndPoint: src.originalEndPoint,
     };
     // enrich data
     const lon = Math.round(result.geolon * 10) / 10 * (result.geolon<0?-1:1) + (result.geolon<0?'W':'E');
@@ -81,6 +82,7 @@ class _WeatherService {
       geolat: src.city.coord.lat,
       geolon: src.city.coord.lon,
       originalQuery: src.originalQuery,
+      originalEndPoint: src.originalEndPoint,
     };
 
     let weatherList = src.list.filter(item => {
