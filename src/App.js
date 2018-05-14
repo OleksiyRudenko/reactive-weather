@@ -6,6 +6,7 @@ import {SettingsService} from "./services/SettingsService";
 import {WeatherService} from "./services/WeatherService";
 import {FavCityService} from "./services/FavCityService";
 import * as dom from './utils/dom.js';
+import {CityHistoryService} from "./services/CityHistoryService";
 
 class App extends Component {
   constructor(props={}) {
@@ -188,6 +189,7 @@ class App extends Component {
   _addHistoryEntry(cityFull) {
     console.log('App._addHistoryEntry(): put into history', cityFull);
     this.setState({searchTerm:cityFull});
+    CityHistoryService.addEntry({name:cityFull});
   }
 }
 
