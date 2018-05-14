@@ -1,13 +1,18 @@
+.search-bar-container {
+    padding-top: 2rem;
+    min-width: 5rem;
+}
+
 form.search-bar-form {
     position: relative;
-    margin-top: 2rem;
+    width: 100%;
 }
 
 input.search-bar-input {
     min-width: 5rem;
     color: var(--color-darkest);
     background-color: var(--color-white-xparent);
-    border-width: 0 0 0.06rem 0;
+    border-width: 0 0 0.1rem 0;
     border-bottom: 0.1rem solid var(--color-dark);
     border-radius: 1.6rem;
     height: 3.2rem;

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.png';
 import './App.css';
 import SearchBar from './components/SearchBar';
 import WeatherCurrent from './components/WeatherCurrent';
@@ -25,10 +24,6 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Weather app</h1>
-        </header>
         <SearchBar locationHandler={this.handleLocation} />
         {this.state.weatherCurrent && <WeatherCurrent data={this.state.weatherCurrent} unitSwitchHandler={this.handleUnitSwitch} favCitySwitch={this.handleFavCitySwitch} />}
       </div>

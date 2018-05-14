@@ -1,7 +1,4 @@
 .weather-current {
-    position: absolute;
-    z-index: -3;
-
     margin-top: 1rem;
     background-color: rgba(238,238,238,0.5); /* #eee */
 
