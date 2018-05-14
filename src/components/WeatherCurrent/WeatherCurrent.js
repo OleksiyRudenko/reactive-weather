@@ -9,17 +9,19 @@ export default class WeatherCurrent extends Component {
   }
   render() {
     const data = this.props.data;
-    console.log('WeatherCurrent', data);
+    // console.log('WeatherCurrent', data);
     if (data === 'pending') {
       return <div className="width-100"><div className='loader loader-big'></div></div>;
     }
 
+    let {cityFull, geoFull} = data;
+
     if (typeof data.showFavControl === 'undefined')
       data.showFavControl = true;
-    if (data.showFavControl && !data.cityFull.length) {
+    if (!cityFull.length) {
       // no mnemonic location
-      data.cityFull = data.geoFull;
-      data.geoFull = '';
+      cityFull = geoFull;
+      geoFull = '';
       data.showFavControl = false;
     }
 
@@ -32,7 +34,7 @@ export default class WeatherCurrent extends Component {
       title: 'Love me!',
       icon: 'star_border',
     };
-    console.log(data.showFavControl);
+    // console.log('WeatherCurrent.render()', data.showFavControl);
     const favCityStatus = data.showFavControl
       ? (data.isFavCity === 'pending'
         ? <div className='loader loader-small'></div>
@@ -42,8 +44,8 @@ export default class WeatherCurrent extends Component {
       <div className="weather-current">
         <div className="weather-current-row">
           {favCityStatus}
-          <div className="weather-current-main-city">{data.cityFull}</div>
-          <div className="weather-current-main-geo">{data.geoFull}</div>
+          <div className="weather-current-main-city">{cityFull}</div>
+          <div className="weather-current-main-geo">{geoFull}</div>
         </div>
         <div className="weather-current-row">
           <div className="weather-current-column">
