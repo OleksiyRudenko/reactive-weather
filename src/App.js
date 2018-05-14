@@ -7,16 +7,21 @@ import {WeatherService} from "./services/WeatherService";
 import {FavCityService} from "./services/FavCityService";
 import * as dom from './utils/dom.js';
 import {CityHistoryService} from "./services/CityHistoryService";
+import {UrlService} from "./services/UrlService";
 
 class App extends Component {
   constructor(props={}) {
     super(props);
     this.state = {
-      searchTerm: '',
+      searchTerm: UrlService.getCityName(),
       weatherCurrent: null,
       weatherForecast: null,
     };
     dom.bindHandlers(this, 'handleLocation', 'handleUnitSwitch', 'handleFavCitySwitch', '_addHistoryEntry');
+    if (this.state.searchTerm.length) {
+      this.handleLocation(this.state.searchTerm);
+    }
+    UrlService.addNavigationHandler(this.handleLocation);
   }
 
   /**
@@ -190,6 +195,7 @@ class App extends Component {
     console.log('App._addHistoryEntry(): put into history', cityFull);
     this.setState({searchTerm:cityFull});
     CityHistoryService.addEntry({name:cityFull});
+    UrlService.updateUrl(cityFull);
   }
 }
 

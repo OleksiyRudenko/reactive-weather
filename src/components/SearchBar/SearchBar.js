@@ -10,7 +10,7 @@ export default class SearchBar extends Component {
     this.state = {
       searchTerm: this.props.searchTerm,
       actionDisabled: true,
-      showCityList: true,
+      showCityList: !this.props.searchTerm.length,
       activateCityList: false,
     };
     dom.bindHandlers(this, '_handleSearchAction', '_handleUserInput', '_handleUserKey', '_handleUserInputFocus', '_hideDropDown', '_handleInboundLocation');
@@ -22,7 +22,7 @@ export default class SearchBar extends Component {
    * @returns {string}
    */
   render() {
-    // console.log('SB.render:', this.state);
+    console.log('SB.render:', this.state);
     return (
       <div className="search-bar-container">
         <form className="search-bar-form" onSubmit={this._handleSearchAction} autoComplete="off" target="#">
