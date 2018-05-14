@@ -11,10 +11,11 @@ class App extends Component {
   constructor(props={}) {
     super(props);
     this.state = {
+      searchTerm: '',
       weatherCurrent: null,
       weatherForecast: null,
     };
-    dom.bindHandlers(this, 'handleLocation', 'handleUnitSwitch', 'handleFavCitySwitch');
+    dom.bindHandlers(this, 'handleLocation', 'handleUnitSwitch', 'handleFavCitySwitch', '_addHistoryEntry');
   }
 
   /**
@@ -24,7 +25,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <SearchBar locationHandler={this.handleLocation} />
+        <SearchBar locationHandler={this.handleLocation} searchTerm={this.state.searchTerm} />
         {this.state.weatherCurrent && <WeatherCurrent data={this.state.weatherCurrent} unitSwitchHandler={this.handleUnitSwitch} favCitySwitch={this.handleFavCitySwitch} />}
       </div>
     );
@@ -37,7 +38,7 @@ class App extends Component {
    */
   handleLocation(location) {
     console.log('APP.handleLocation', location);
-    this.setState({searchTerm:location});
+    // this.setState({searchTerm:location});
     this._getWeather(location);
   }
 
@@ -75,12 +76,13 @@ class App extends Component {
         // manage history
         this._addHistoryEntry(data.cityFull);
       }
-
-      FavCityService.getItem(data.cityFull).then(result => {
-        // console.log('App._getCurrentWeather', result);
-        data.isFavCity = !!result;
-        this.setState({weatherCurrent: data});
-      }).catch(e => console.error);
+      if (inputType === 'cityname') {
+        FavCityService.getItem(data.cityFull).then(result => {
+          // console.log('App._getCurrentWeather', result);
+          data.isFavCity = !!result;
+          this.setState({weatherCurrent: data});
+        }).catch(e => console.error);
+      }
     }, 500));
   }
 
@@ -185,6 +187,7 @@ class App extends Component {
    */
   _addHistoryEntry(cityFull) {
     console.log('App._addHistoryEntry(): put into history', cityFull);
+    this.setState({searchTerm:cityFull});
   }
 }
 
