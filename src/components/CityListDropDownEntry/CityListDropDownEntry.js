@@ -4,7 +4,7 @@ import './CityListDropDownEntry.css';
 export default class CityListDropDown extends Component {
   render() {
     const props = this.props;
-    console.log('CLDDE.render', this.props, !props.id && props.setFocus);
+    // console.log('CLDDE.render', this.props, !props.id && props.setFocus);
     return (
       <label htmlFor={'city-list-dd-item-'+props.id}>
         <input type='radio' name='city-list-dd-selection' id={'city-list-dd-item-'+props.id} defaultValue={props.text}
@@ -16,12 +16,12 @@ export default class CityListDropDown extends Component {
     );
   }
   componentDidMount() {
-    console.log('CLDDE.didMount', this.props, this.inputControl, this.inputControl.focus);
+    // console.log('CLDDE.didMount', this.props, this.inputControl, this.inputControl.focus);
     this.props.setFocus && this.inputControl.focus();
   }
 
   componentDidUpdate() {
-    console.log('CLDDE.didUpdate', this.props, this.inputControl, this.inputControl.focus);
+    // console.log('CLDDE.didUpdate', this.props, this.inputControl, this.inputControl.focus);
     this.props.setFocus && this.inputControl.focus();
   }
 }
