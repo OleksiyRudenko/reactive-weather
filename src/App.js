@@ -9,6 +9,7 @@ import {FavCityService} from "./services/FavCityService";
 import * as dom from './utils/dom.js';
 import {CityHistoryService} from "./services/CityHistoryService";
 import {UrlService} from "./services/UrlService";
+import {config} from './config.js';
 
 class App extends Component {
   constructor(props={}) {
@@ -31,7 +32,7 @@ class App extends Component {
    */
   render() {
     return (
-      <div className="App">
+      <div className="App" ref={element => this.UIelement = element}>
         <SearchBar locationHandler={this.handleLocation} searchTerm={this.state.searchTerm} />
         {this.state.weatherCurrent && <WeatherCurrent data={this.state.weatherCurrent} unitSwitchHandler={this.handleUnitSwitch} favCitySwitch={this.handleFavCitySwitch} />}
         {this.state.weatherForecast && <WeatherForecast data={this.state.weatherForecast} />}
@@ -78,6 +79,7 @@ class App extends Component {
     WeatherService.getCurrentWeather(inputType, query).then(data => setTimeout(() => {
       data.isFavCity = 'pending';
       this.setState({weatherCurrent: data});
+      this.renderMood(data.date, data.geolat, data.verbose);
       // this.setState({searchTerm: data.cityFull});
       console.log('APP._getCurrentWeather data', data);
       if (data.cityFull && data.cityFull.length) {
@@ -220,6 +222,58 @@ class App extends Component {
     this.setState({searchTerm:cityFull});
     CityHistoryService.addEntry({name:cityFull});
     UrlService.updateUrl(cityFull);
+  }
+
+  /* === Mood === */
+
+  /**
+   *
+   * @param {Date} date
+   * @param {number} geolat
+   * @param {Object} verboseConditions { tod: day|night, conditions: clearSky|rain|... }
+   */
+  renderMood(date, geolat, verboseConditions) {
+    if (!date) date = new Date();
+    if (!geolat) geolat = 50;
+    if (!verboseConditions) verboseConditions = {tod: 0, conditions: 0};
+    const season = this._getSeason(date, geolat);
+    const img = this._getMoodImage(verboseConditions.conditions, verboseConditions.tod, season);
+    this.UIelement.style.backgroundImage = "url('" + img + "')";
+  }
+
+  /**
+   * Gets season hemisphere- and longitude-wise
+   * @param {Date} date
+   * @param {number} geolat
+   * @returns {string} spring|summer|autumn|winter
+   */
+  _getSeason(date, geolat) {
+    const month = date.getMonth() + 1;
+    let season = month < 4 ? 'winter'
+      : month < 6 ? 'spring'
+        : month < 9 ? 'summer'
+          : month < 12 ? 'autumn'
+            : 'winter';
+    // invert season for Southern hemisphere
+    if (geolat < 0) {
+      season = season === 'winter' ? 'summer' : season === 'summer' ? 'winter' : season;
+    }
+    if (geolat > 65 || geolat < -60) season = 'winter';
+    if (geolat <=30 && geolat >-30) season = 'summer';
+    return season;
+  }
+
+  /**
+   *
+   * @param {string} conditions clearSky|rain|snow|...
+   * @param {string} tod time of day == day|night
+   * @param {string} season
+   * @returns {string} mood image url
+   */
+  _getMoodImage(conditions, tod, season) {
+    if (!conditions) return config.mood.seasons[season];
+    if (conditions === 'unknown') conditions = 'clearSky';
+    return config.mood.imagery[conditions][tod][season];
   }
 }
 
