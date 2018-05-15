@@ -6,15 +6,18 @@
   --color-lightest: #eee;
   --color-white:    #fff;
 
-  --color-darkest-xparent:  rgba(51, 51, 51, 0.8);
+  --color-darkest-xparent:  rgba( 51,  51,  51, 0.8);
   --color-dark-xparent:     rgba(102, 102, 102, 0.8);
   --color-neutral-xparent:  rgba(153, 153, 153, 0.8);
   --color-light-xparent:    rgba(187, 187, 187, 0.8);
   --color-lightest-xparent: rgba(238, 238, 238, 0.8);
-  --color-white-xparent:    rgba(255,255,255,0.6);
+  --color-white-xparent:    rgba(255, 255, 255, 0.6);
 
   --color-accent: #6495ed;
   --color-bright: Yellow;
+
+  --color-alert:         rgba(240, 33, 33, 1.0);
+  --color-alert-xparent: rgba(210, 33, 33, 0.4);
 }
 
 html {

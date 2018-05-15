@@ -91,7 +91,11 @@ class App extends Component {
           this.setState({weatherCurrent: data});
         }).catch(e => console.error);
       }
-    }, 500));
+    }, 500)).catch(error => {
+      this.setState({weatherCurrent: {
+          errorMessage: error,
+        }});
+    });;
   }
 
   /**
@@ -105,7 +109,11 @@ class App extends Component {
     WeatherService.getWeatherForecast(inputType, query).then(data => setTimeout(() => {
       console.log('APP._getWeatherForecast data', data);
       this.setState({weatherForecast: data});
-    }, 700));
+    }, 700)).catch(error => {
+      this.setState({weatherForecast: {
+          errorMessage: error,
+      }});
+    });
   }
 
   /**

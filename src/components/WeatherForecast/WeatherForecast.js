@@ -11,6 +11,10 @@ export default class WeatherForecast extends Component {
       </div></div>);
     }
 
+    if (data.errorMessage) {
+      return <div className='error'>{data.errorMessage}</div>;
+    }
+
     return (<div className="weather-forecast">
       {data.weatherSchedule.map((item,idx) => <WeatherForecastItem key={idx.toString()} data={item} />)}
     </div>);

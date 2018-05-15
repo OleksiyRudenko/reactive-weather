@@ -31,7 +31,7 @@ class _WeatherApiService {
       .then(response => {
         if (response.ok)
           return response.json();
-        throw response.status;
+        return Promise.reject('Weather Server responded ' + response.status);
       })
       .then(data => {
         // verbalize icon
@@ -41,6 +41,8 @@ class _WeatherApiService {
             data.weather[0].verbose = this._decomposeIconId(data.weather[0].icon);
             break;
           case 'forecast5':
+            console.log('WAPIS.data', data);
+            if (typeof data.list === 'undefined') return Promise.reject('No forecast data');
             data.list.forEach((entry, idx) => {
               data.list[idx].weather[0].verbose = this._decomposeIconId(data.list[idx].weather[0].icon);
             });
@@ -51,10 +53,9 @@ class _WeatherApiService {
         data.originalQuery = queryData;
         data.originalEndPoint = endPoint;
         return data;
-      })
-      .catch(error => {
+      }).catch(error => {
         // console.error(error);
-        throw error;
+        return Promise.reject(error);
       });
   }
 
