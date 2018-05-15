@@ -89,13 +89,13 @@ class App extends Component {
           // console.log('App._getCurrentWeather', result);
           data.isFavCity = !!result;
           this.setState({weatherCurrent: data});
-        }).catch(e => console.error);
+        }).catch(console.error);
       }
     }, 500)).catch(error => {
       this.setState({weatherCurrent: {
           errorMessage: error,
         }});
-    });;
+    });
   }
 
   /**
