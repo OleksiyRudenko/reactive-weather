@@ -2,10 +2,12 @@
     margin-top: 1rem;
     background-color: rgba(238,238,238,0.5); /* #eee */
 
+    padding: 0.5rem;
     display: flex;
     flex-flow: column;
     flex-shrink: 0;
     align-items: center;
+    border-radius: 0.5rem;
 }
 
 .weather-current-row {
