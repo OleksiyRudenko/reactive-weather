@@ -9,7 +9,7 @@ export default class SearchBar extends Component {
     super(props);
     this.state = {
       searchTerm: this.props.searchTerm,
-      actionDisabled: true,
+      actionDisabled: this.props.searchTerm.length < 3,
       showCityList: !this.props.searchTerm.length,
       activateCityList: false,
     };
