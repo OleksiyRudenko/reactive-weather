@@ -13,17 +13,21 @@
    src: https://www.w3schools.com/howto/howto_css_loader.asp
 */
 .loader {
-  border: 1rem solid var(--color-lightest);
+  border: none; /* 1rem solid var(--color-lightest-xparent); */
   border-radius: 50%;
-  border-top: 1rem solid var(--color-accent);
+  /* border-top: 1rem solid var(--color-accent); */
   -webkit-animation: loader-spin 2s linear infinite; /* Safari */
   animation: loader-spin 2s linear infinite;
   margin: 0 auto;
+  color: var(--color-lightest);
 }
 
 .loader-big {
   width: 8rem;
   height: 8rem;
+  font-size: 5rem;
+  text-align: center;
+  color: var(--color-bright);
 }
 
 .loader-small {

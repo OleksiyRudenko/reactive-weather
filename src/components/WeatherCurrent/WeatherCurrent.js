@@ -11,7 +11,7 @@ export default class WeatherCurrent extends Component {
     const data = this.props.data;
     // console.log('WeatherCurrent', data);
     if (data === 'pending') {
-      return <div className="width-100"><div className='loader loader-big'></div></div>;
+      return <div className="width-100"><div className='loader loader-big'><i className="wi wi-day-sunny"></i></div></div>;
     }
 
     let {cityFull, geoFull} = data;
