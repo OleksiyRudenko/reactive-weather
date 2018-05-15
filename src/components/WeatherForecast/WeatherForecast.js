@@ -18,12 +18,12 @@ export default class WeatherForecast extends Component {
 }
 
 function WeatherForecastItem(props) {
-  return (<div class={"wf-item " + getShadeOfTheTime(props.data.dtHours)}>
-    <div class="wf-icon"><i class={"wi " + props.data.descrIconClass}></i></div>
-    <div class="wf-descr">{props.data.descr}</div>
-    <div class="wf-temp">{props.data.temp}°</div>
-    <div class="wf-time">{props.data.dtHours}:00</div>
-    <div class="wf-date">{props.data.dtDate}</div>
+  return (<div className={"wf-item " + getShadeOfTheTime(props.data.dtHours)}>
+      <div className="wf-icon"><i className={"wi " + props.data.descrIconClass}></i></div>
+      <div className="wf-descr">{props.data.descr}</div>
+      <div className="wf-temp">{props.data.temp}°</div>
+      <div className="wf-time">{props.data.dtHours}:00</div>
+      <div className="wf-date">{props.data.dtDate}</div>
     </div>);
 }
 
