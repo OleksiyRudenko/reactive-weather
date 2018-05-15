@@ -224,6 +224,10 @@ class App extends Component {
     UrlService.updateUrl(cityFull);
   }
 
+  componentDidMount() {
+    this.renderMood();
+  }
+
   /* === Mood === */
 
   /**
