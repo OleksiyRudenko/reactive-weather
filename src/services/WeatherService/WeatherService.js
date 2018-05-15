@@ -98,6 +98,7 @@ class _WeatherService {
       descr: item.weather[0].main,
       descrDetails: item.weather[0].description,
       descrIcon: '<img src="' + WeatherApiService.apiIconUrl(item.weather[0].icon) + '" />',
+      descrIconClass : 'wi ' + this._getWeatherConditionsIcon(item.weather[0].verbose.tod, item.weather[0].verbose.conditions),
       verbose: item.weather[0].verbose,
       temp: Math.round(item.main.temp),
       pressure: Math.round(item.main.pressure),

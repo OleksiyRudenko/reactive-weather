@@ -1,0 +1,66 @@
+.weather-forecast {
+    margin-top: 1rem;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    max-width: 31rem;
+}
+
+/* Weather Forecast item */
+
+.wf-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 0.5em;
+    margin: 0.2em;
+}
+
+.wf-darkest {
+    background-color: var(--color-darkest-xparent);
+    color: var(--color-lightest);
+}
+
+.wf-dark {
+    background-color: var(--color-dark-xparent);
+    color: var(--color-lightest);
+}
+
+.wf-neutral {
+    background-color: var(--color-neutral-xparent);
+    color: var(--color-darkest);
+}
+
+.wf-light {
+    background-color: var(--color-light-xparent);
+    color: var(--color-darkest);
+}
+
+.wf-lightest {
+    background-color: var(--color-lightest-xparent);
+    color: var(--color-darkest);
+}
+
+.wf-icon {
+}
+
+.wf-descr {
+    font-size: 60%;
+    text-align: center;
+}
+
+.wf-temp {
+    font-size: 120%;
+    text-align: center;
+}
+
+.wf-time {
+    font-size: 80%;
+    text-align: center;
+}
+
+.wf-date {
+    text-align: center;
+}

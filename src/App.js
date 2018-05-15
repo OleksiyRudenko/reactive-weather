@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import SearchBar from './components/SearchBar';
 import WeatherCurrent from './components/WeatherCurrent';
+import WeatherForecast from './components/WeatherForecast';
 import {SettingsService} from "./services/SettingsService";
 import {WeatherService} from "./services/WeatherService";
 import {FavCityService} from "./services/FavCityService";
@@ -33,6 +34,7 @@ class App extends Component {
       <div className="App">
         <SearchBar locationHandler={this.handleLocation} searchTerm={this.state.searchTerm} />
         {this.state.weatherCurrent && <WeatherCurrent data={this.state.weatherCurrent} unitSwitchHandler={this.handleUnitSwitch} favCitySwitch={this.handleFavCitySwitch} />}
+        {this.state.weatherForecast && <WeatherForecast data={this.state.weatherForecast} />}
       </div>
     );
   }
@@ -61,7 +63,7 @@ class App extends Component {
       query.units = units;
       console.log('App.getWeather query', query);
       this._getCurrentWeather(inputType, query);
-      // WeatherService.getWeatherForecast(inputType, query).then(console.log);
+      this._getWeatherForecast(inputType, query);
     });
   }
 
@@ -90,6 +92,20 @@ class App extends Component {
         }).catch(e => console.error);
       }
     }, 500));
+  }
+
+  /**
+   * Show weather forecast
+   * @param {string} inputType {cityname|latlon}
+   * @param {Object} query
+   * @private
+   */
+  _getWeatherForecast(inputType, query) {
+    this.setState({weatherForecast: 'pending'});
+    WeatherService.getWeatherForecast(inputType, query).then(data => setTimeout(() => {
+      console.log('APP._getWeatherForecast data', data);
+      this.setState({weatherForecast: data});
+    }, 700));
   }
 
   /**
