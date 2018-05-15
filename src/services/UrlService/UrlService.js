@@ -45,7 +45,7 @@ class _UrlService {
     const url = new URL(window.location.href);
     const cityName = url.searchParams.get('q');
     console.log('UrlService.getCityName =>' + cityName);
-    return cityName;
+    return cityName || '';
   }
 }
 
