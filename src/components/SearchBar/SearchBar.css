@@ -1,4 +1,6 @@
 .search-bar-container {
+    display: flex;
+    flex-flow: column;
     padding-top: 2rem;
     min-width: 5rem;
 }
@@ -9,7 +11,8 @@ form.search-bar-form {
 }
 
 input.search-bar-input {
-    min-width: 5rem;
+    width: inherit;
+    /* min-width: 5rem; */
     color: var(--color-darkest);
     background-color: var(--color-white-xparent);
     border-width: 0 0 0.1rem 0;
