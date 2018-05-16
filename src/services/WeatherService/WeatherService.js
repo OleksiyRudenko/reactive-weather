@@ -15,7 +15,8 @@ class _WeatherService {
    */
   getCurrentWeather(inputType, query) {
     return WeatherApiService.apiRequest('current', inputType, query)
-      .then(result => this._extractCurrentWeather(result));
+      .then(result => this._extractCurrentWeather(result))
+      .catch(error => Promise.reject('No weather data for given location (' + error + ')'));
   }
 
   /**
@@ -26,7 +27,8 @@ class _WeatherService {
    */
   getWeatherForecast(inputType, query) {
     return WeatherApiService.apiRequest('forecast5', inputType, query)
-      .then(result => this._extractForecast(result));
+      .then(result => this._extractForecast(result))
+      .catch(error => Promise.reject('No forecast data for given location (' + error + ')'));
   }
 
   /**

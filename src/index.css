@@ -18,6 +18,7 @@
 
   --color-alert:         rgba(240, 33, 33, 1.0);
   --color-alert-xparent: rgba(210, 33, 33, 0.4);
+  --color-alert-dark:   rgba(99, 33, 33, 1.0);
 }
 
 html {

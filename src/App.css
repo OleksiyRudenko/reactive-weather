@@ -39,18 +39,6 @@
   height: 2rem;
 }
 
-.error {
-  margin-top: 1rem;
-  border-radius: 1.6rem;
-  background-color: var(--color-alert-xparent);
-  color: var(--color-alert);
-  width: 32rem;
-  height: 12rem;
-  font-size: 1.6rem;
-  line-height: 8rem;
-  padding: 1rem 1rem;
-}
-
 /* Safari */
 @-webkit-keyframes loader-spin {
   0% { -webkit-transform: rotate(0deg); }

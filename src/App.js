@@ -3,6 +3,7 @@ import './App.css';
 import SearchBar from './components/SearchBar';
 import WeatherCurrent from './components/WeatherCurrent';
 import WeatherForecast from './components/WeatherForecast';
+import AppError from './components/AppError';
 import {SettingsService} from "./services/SettingsService";
 import {WeatherService} from "./services/WeatherService";
 import {FavCityService} from "./services/FavCityService";
@@ -18,6 +19,7 @@ class App extends Component {
       searchTerm: UrlService.getCityName(),
       weatherCurrent: null,
       weatherForecast: null,
+      error: [],
     };
     dom.bindHandlers(this, 'handleLocation', 'handleUnitSwitch', 'handleFavCitySwitch', '_addHistoryEntry');
     if (this.state.searchTerm.length) {
@@ -36,6 +38,7 @@ class App extends Component {
         <SearchBar locationHandler={this.handleLocation} searchTerm={this.state.searchTerm} />
         {this.state.weatherCurrent && <WeatherCurrent data={this.state.weatherCurrent} unitSwitchHandler={this.handleUnitSwitch} favCitySwitch={this.handleFavCitySwitch} />}
         {this.state.weatherForecast && <WeatherForecast data={this.state.weatherForecast} />}
+        {this.state.error.length && <AppError messages={this.state.error} />}
       </div>
     );
   }
@@ -59,6 +62,7 @@ class App extends Component {
   _getWeather(location) {
     const inputType = this._detectInputType(location);
     const query = this._buildQuery(location);
+    this.setState({error:[]});
     // add units explicitly
     SettingsService.units.then(units => {
       query.units = units;
@@ -94,9 +98,11 @@ class App extends Component {
         }).catch(console.error);
       }
     }, 500)).catch(error => {
-      this.setState({weatherCurrent: {
-          errorMessage: error,
-        }});
+      console.log('ERROR', error);
+      this.setState({
+        weatherCurrent: null,
+        error: [...this.state.error, error]
+      });
     });
   }
 
@@ -112,9 +118,10 @@ class App extends Component {
       console.log('APP._getWeatherForecast data', data);
       this.setState({weatherForecast: data});
     }, 700)).catch(error => {
-      this.setState({weatherForecast: {
-          errorMessage: error,
-      }});
+      this.setState({
+        weatherForecast: null,
+        error: [...this.state.error, error]
+      });
     });
   }
 

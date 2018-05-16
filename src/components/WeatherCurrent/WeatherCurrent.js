@@ -13,9 +13,6 @@ export default class WeatherCurrent extends Component {
     if (data === 'pending') {
       return <div className="width-100"><div className='loader loader-big'><i className="wi wi-day-sunny"></i></div></div>;
     }
-    if (data.errorMessage) {
-      return <div className='error'>{data.errorMessage}</div>;
-    }
 
     let {cityFull, geoFull} = data;
 
