@@ -7,4 +7,5 @@
     width: calc(100% - 2.6rem);
     left: 1.3rem;
     margin-top: 3.1rem;
+    z-index: 1;
 }

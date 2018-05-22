@@ -13,8 +13,10 @@
   --color-lightest-xparent: rgba(238, 238, 238, 0.8);
   --color-white-xparent:    rgba(255, 255, 255, 0.6);
 
-  --color-accent: #6495ed;
-  --color-bright: Yellow;
+  --color-accent:          rgb(100, 149, 237);
+  --color-accent-xparent: rgba(100, 149, 237, 0.8);
+  --color-bright:          rgb(255, 255,   0);
+  --color-bright-xparent: rgba(255, 255,   0, 0.8);
 
   --color-alert:         rgba(240, 33, 33, 1.0);
   --color-alert-xparent: rgba(210, 33, 33, 0.4);

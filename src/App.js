@@ -20,6 +20,7 @@ class App extends Component {
       weatherCurrent: null,
       weatherForecast: null,
       error: [],
+      weatherShowCounter: 0,
     };
     dom.bindHandlers(this, 'handleLocation', 'handleUnitSwitch', 'handleFavCitySwitch', '_addHistoryEntry');
     if (this.state.searchTerm.length) {
@@ -36,7 +37,11 @@ class App extends Component {
     return (
       <div className="App" ref={element => this.UIelement = element}>
         <SearchBar locationHandler={this.handleLocation} searchTerm={this.state.searchTerm} />
-        {this.state.weatherCurrent && <WeatherCurrent data={this.state.weatherCurrent} unitSwitchHandler={this.handleUnitSwitch} favCitySwitch={this.handleFavCitySwitch} />}
+        {this.state.weatherCurrent && <WeatherCurrent data={this.state.weatherCurrent}
+                                                      unitSwitchHandler={this.handleUnitSwitch}
+                                                      favCitySwitch={this.handleFavCitySwitch}
+                                                      showUnitsSwitchHint={this.state.weatherShowCounter===1}
+                                                      showFavouriteSwitchHint={this.state.weatherShowCounter===2} />}
         {this.state.weatherForecast && <WeatherForecast data={this.state.weatherForecast} />}
         {(this.state.error.length && <AppError messages={this.state.error} />) || ""}
       </div>
@@ -82,7 +87,10 @@ class App extends Component {
     this.setState({weatherCurrent: 'pending'});
     WeatherService.getCurrentWeather(inputType, query).then(data => setTimeout(() => {
       data.isFavCity = 'pending';
-      this.setState({weatherCurrent: data});
+      this.setState({
+        weatherCurrent: data,
+        weatherShowCounter: this.state.weatherShowCounter + 1,
+      });
       this.renderMood(data.date, data.geolat, data.verbose);
       // this.setState({searchTerm: data.cityFull});
       console.log('APP._getCurrentWeather data', data);

@@ -43,7 +43,10 @@ export default class WeatherCurrent extends Component {
     return (
       <div className="weather-current">
         <div className="weather-current-row">
-          {favCityStatus}
+          <div className={ this.props.showFavouriteSwitchHint && "ux-hinted-element-container"}>
+            {favCityStatus}
+            {this.props.showFavouriteSwitchHint && (<div className="ux-hint-rippler">Love me!</div>)}
+          </div>
           <div className="weather-current-main-city" dangerouslySetInnerHTML={{__html: wbrLocationName(cityFull)}}></div>
           <div className="weather-current-main-geo">{geoFull}</div>
         </div>
@@ -71,9 +74,12 @@ export default class WeatherCurrent extends Component {
             <div className="weather-current-column">
               <div className="weather-current-row">
                 <div className="weather-current-temp">{data.temp}</div>
-                  <button className="weather-current-unit-switch" type="button" title="Switch me!" onClick={this.props.unitSwitchHandler}>
-                    <i className={'wi ' + (data.originalQuery.units==='imperial'?'wi-fahrenheit':'wi-celsius')}></i>
-                  </button>
+                  <div className={ this.props.showUnitsSwitchHint && "ux-hinted-element-container"}>
+                    <button className="weather-current-unit-switch" type="button" title="Switch me!" onClick={this.props.unitSwitchHandler}>
+                      <i className={'wi ' + (data.originalQuery.units==='imperial'?'wi-fahrenheit':'wi-celsius')}></i>
+                      {this.props.showUnitsSwitchHint && (<div className="ux-hint-rippler">Switch me!</div>)}
+                    </button>
+                  </div>
               </div>
               <div className="weather-current-descr-main">{data.descr}</div>
               <div className="weather-current-descr-extended">{data.descrDetails}</div>
