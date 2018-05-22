@@ -99,9 +99,9 @@ export default class WeatherCurrent extends Component {
 }
 
 /**
- * Inserts <wbr>
- * @param locationFullName
- * @returns {*}
+ * Inserts <wbr> in a full location name
+ * @param {string} locationFullName
+ * @returns {string} source with <wbr> tags inserted
  */
 function wbrLocationName(locationFullName) {
   return wbr(locationFullName.split(',').join(', '), 10);
@@ -111,7 +111,7 @@ function wbrLocationName(locationFullName) {
  * Inserts <WBR> tag in str in words longer than num
  * @param {string} str
  * @param {number} maxlen
- * @returns {string | void | *}
+ * @returns {string} source with <wbr> tags inserted
  */
 function wbr(str, maxlen) {
   return str.replace(RegExp("(\\w{" + maxlen + "})(\\w)", "g"), (all,text,char) => {
