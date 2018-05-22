@@ -113,11 +113,11 @@
     border: none;
     cursor: pointer;
     overflow: hidden;
-    width: 2.6rem;
-    height: 2.6rem;
-    font-size: 2rem;
-    border-radius: 1.3rem;
-    line-height: 2.1rem;
+    width: 3.2rem;
+    height: 3.2rem;
+    font-size: 3rem;
+    border-radius: 50%;
+    line-height: 0.7rem;
     text-align: center;
     outline: none;
 }
