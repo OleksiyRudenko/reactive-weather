@@ -50,6 +50,28 @@
 .weather-current-data {
 }
 
+.weather-current-summary-container {
+    order: 1;
+}
+
+.weather-current-icon-container {
+    order: 2;
+}
+
+.weather-current-coniditions-container {
+    order: 3;
+}
+
+@media (max-width: 516px) {
+    .weather-current-icon-container {
+        order: 3;
+    }
+
+    .weather-current-coniditions-container {
+        order: 2;
+    }
+}
+
 /* entries */
 
 .weather-current-main-item {
