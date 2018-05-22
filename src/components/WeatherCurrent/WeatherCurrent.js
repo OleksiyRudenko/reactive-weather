@@ -44,7 +44,7 @@ export default class WeatherCurrent extends Component {
       <div className="weather-current">
         <div className="weather-current-row">
           {favCityStatus}
-          <div className="weather-current-main-city">{cityFull}</div>
+          <div className="weather-current-main-city" dangerouslySetInnerHTML={{__html: wbrLocationName(cityFull)}}></div>
           <div className="weather-current-main-geo">{geoFull}</div>
         </div>
         <div className="weather-current-row">
@@ -90,4 +90,25 @@ export default class WeatherCurrent extends Component {
       this.props.favCitySwitch(data.isFavCity, data.cityFull);
     }
   }
+}
+
+/**
+ * Inserts <wbr>
+ * @param locationFullName
+ * @returns {*}
+ */
+function wbrLocationName(locationFullName) {
+  return wbr(locationFullName.split(',').join(', '), 10);
+}
+
+/**
+ * Inserts <WBR> tag in str in words longer than num
+ * @param {string} str
+ * @param {number} maxlen
+ * @returns {string | void | *}
+ */
+function wbr(str, maxlen) {
+  return str.replace(RegExp("(\\w{" + maxlen + "})(\\w)", "g"), (all,text,char) => {
+    return text + '<wbr>' + char;
+  });
 }

@@ -38,7 +38,7 @@ class App extends Component {
         <SearchBar locationHandler={this.handleLocation} searchTerm={this.state.searchTerm} />
         {this.state.weatherCurrent && <WeatherCurrent data={this.state.weatherCurrent} unitSwitchHandler={this.handleUnitSwitch} favCitySwitch={this.handleFavCitySwitch} />}
         {this.state.weatherForecast && <WeatherForecast data={this.state.weatherForecast} />}
-        {this.state.error.length && <AppError messages={this.state.error} />}
+        {(this.state.error.length && <AppError messages={this.state.error} />) || ""}
       </div>
     );
   }
